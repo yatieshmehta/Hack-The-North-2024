@@ -4,13 +4,14 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 # Create your models here.
 
+
 class UserManager(BaseUserManager):
     pass
 
-class Resumes(models.Model):
-    file_id = models.AutoField(primary_key=True)
-    file = models.FileField(upload_to='documents/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+def resume_path(instance, filename):
+    return f"documents/{instance.username}/{filename}"
+
 
 class Users(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
@@ -21,8 +22,7 @@ class Users(AbstractBaseUser):
 
     role = models.CharField(max_length=255)
     bio = models.TextField()
-
-    resume = models.ForeignKey(Resumes, on_delete=models.CASCADE, blank=True, null=True)
+    resume = models.FileField(upload_to=resume_path)
 
     #profile_picture = models.ForeignKey(ProfilePicture, on_delete=models.CASCADE, null=True)#on_delete=models.SET_DEFAULT, default=1, blank=False, null=False)
 

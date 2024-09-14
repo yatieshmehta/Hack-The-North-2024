@@ -22,21 +22,10 @@ from django.db.models import Q
 def sign_up(request):
     if request.method == 'POST':
 
-        resume = request.FILES['resume']
-        request.data['resume'] = None
-        print(request.data)
-
         user_serializer = UsersSerializer(data=request.data)
 
         if user_serializer.is_valid():
-            
-            resume_serializer = ResumesSerializer(data=resume)
-
-            if resume_serializer.is_valid():
-                resume_obj = resume_serializer.save()
-                user_serializer.save(resume=resume_obj)
-            else:
-                return Response({'errors': resume_serializer.errors}, status=400)
+            user_serializer.save()
             return Response({'data': user_serializer.data}, status=200)
         else:
             return Response({'error': user_serializer.errors}, 400)

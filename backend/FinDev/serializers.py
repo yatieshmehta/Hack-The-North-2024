@@ -5,9 +5,3 @@ class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = '__all__'
-
-
-class ResumesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Resumes
-        fields = '__all__'
