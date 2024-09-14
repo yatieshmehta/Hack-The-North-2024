@@ -1,4 +1,4 @@
-import Login from "./components/SignUpForm/SignUpForm";
+import SignUpPage from "./components/SignUpForm/SignUpForm";
 import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Header from "./components/Header/Header";
@@ -7,8 +7,9 @@ function App() {
     <div className="App">
       <Header />
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<SignUpPage />}/>
+        <Route path="/home" element={<Home />}/>
+        
       </Routes>
     </div>
   );
