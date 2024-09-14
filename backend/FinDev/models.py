@@ -33,9 +33,16 @@ class Users(AbstractBaseUser):
     def __str__(self):
         return self.username
 
+
+def thumbnail_path(instance, filename):
+    return f"documents/{instance.user_id.username}/posts/{instance.post_id}"
+
+
 class Posts(models.Model):
     post_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+    thumbnail = models.ImageField(upload_to=thumbnail_path)
     title = models.CharField(max_length=255)
     description = models.TextField()
     role = models.TextField()
+    reqs = models.TextField()
