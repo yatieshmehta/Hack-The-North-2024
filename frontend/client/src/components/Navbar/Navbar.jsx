@@ -13,11 +13,11 @@ const Navbar = () => {
         <div className="space-x-4 flex gap:10">
           <Link to="/candidates" className="text-white hover:text-purple-200 flex items-center">
             <Users className="mr-1" />
-            Candidates
+            Your Postings
           </Link>
           <Link to="/projects" className="text-white hover:text-purple-200 flex items-center">
             <Briefcase className="mr-1" />
-            Projects
+            Find Projects
           </Link>
         </div>
       </div>
