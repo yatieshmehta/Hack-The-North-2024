@@ -7,7 +7,7 @@ class UsersSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ResumesSerializer(serializers.ModelSerializer):
+class PostsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Resumes
+        model = Posts
         fields = '__all__'
