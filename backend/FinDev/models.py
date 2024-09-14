@@ -46,3 +46,5 @@ class Posts(models.Model):
     description = models.TextField()
     role = models.TextField()
     reqs = models.TextField()
+    applicants = models.ManyToManyField(Users, related_name='applied', blank=True, null=True)
+    matched = models.ForeignKey(Users, related_name='matched', on_delete=models.SET_NULL, null=True, blank=True)

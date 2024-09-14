@@ -111,4 +111,15 @@ def get_post(request, post_id):
 @api_view(['POST'])
 def apply_to_post(request, post_id):
     if request.method == 'POST':
+        post = Posts.objects.get(post_id=post_id)
+        #if request.user not in post.applicants.all():
+        post.applicants.add(request.user)
+        post.save()
+        return Response({'message': 'Applied successfully'}, status=200)
+
+
+@csrf_exempt
+@api_view(['POST'])
+def get_user_data(request):
+    if request.method == 'POST':
         pass
