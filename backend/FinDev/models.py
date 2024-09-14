@@ -13,6 +13,10 @@ def resume_path(instance, filename):
     return f"documents/{instance.username}/{filename}"
 
 
+def pfp_path(instance, filename):
+    return f"documents/{instance.username}/{filename}"
+
+
 class Users(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=255, unique=True)
@@ -24,7 +28,7 @@ class Users(AbstractBaseUser):
     bio = models.TextField()
     resume = models.FileField(upload_to=resume_path)
 
-    #profile_picture = models.ForeignKey(ProfilePicture, on_delete=models.CASCADE, null=True)#on_delete=models.SET_DEFAULT, default=1, blank=False, null=False)
+    profile_picture = models.ImageField(upload_to=pfp_path)
 
     USERNAME_FIELD = 'username'
     # REQUIRED_FIELDS = []  
