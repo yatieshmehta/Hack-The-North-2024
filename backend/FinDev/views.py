@@ -15,6 +15,7 @@ from .models import *
 from .serializers import *
 from datetime import datetime
 from django.db.models import Q
+from django.http import JsonResponse
 
 
 def get_tokens_for_user(user):
@@ -153,3 +154,6 @@ def get_user_data(request, user_id):
         user = Users.objects.get(user_id=user_id)
         user_serializer = UserInfoSerializer(user, many=False)
         return Response({'data': user_serializer.data}, status=200) 
+    
+def testapicall(request):
+    return JsonResponse({"message": "wpifubfi3"})

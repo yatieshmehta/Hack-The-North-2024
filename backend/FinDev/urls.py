@@ -3,10 +3,11 @@ from django.contrib import admin
 from . import views
 from rest_framework import routers
 from rest_framework.authtoken import views as auth_views
+from django.http import JsonResponse
+
 #from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.DefaultRouter()
-
 urlpatterns = [
     path('', include(router.urls)),
     path('sign-up/', views.sign_up, name='sign_up'),
@@ -20,5 +21,7 @@ urlpatterns = [
     path('get-user-posts/', views.get_user_posts, name='get_user_posts'),
     path('view-applicants/', views.view_applicants, name='view_applicants'),
     path('get-user-data/', views.get_user_data, name='get_user_data'),
+    path('api/test/', views.testapicall, name='testapicall')
+
     
 ]

@@ -6,7 +6,7 @@ import finddev from "../../assets/findev_homepage.jpg";
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const modalRef = useRef(null);
-
+  const [apiResponse, setApiResponse] = useState("");
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -24,7 +24,29 @@ const HomePage = () => {
       document.body.style.overflow = 'unset';
     };
   }, [isModalOpen]);
-
+  const testCall = async () => {
+      try {
+        console.log("Starting API call");
+        const response = await fetch('/api/test/');
+        console.log("Response received:", response);
+        
+        // Log the response text
+        const responseText = await response.text();
+        console.log("Response text:", responseText);
+        
+        if (!response.ok) {
+          throw new Error(`Network response not ok: ${response.status} ${response.statusText}`);
+        }
+        
+        // Only try to parse JSON if the response was ok
+        const data = JSON.parse(responseText);
+        console.log("Data received:", data);
+        setApiResponse(data.message);
+      } catch (error) {
+        console.error("Error in API call:", error);
+        setApiResponse('Failed to fetch data. Please try again.');
+      }
+    };
   return (
     <div className="min-h-screen bg-cover bg-center flex flex-col justify-between"    style={{ 
       backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${finddev})` 
@@ -38,6 +60,15 @@ const HomePage = () => {
         <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl">
           Because your love life is as non-existent as a bug-free code!
         </p>
+        <button
+          onClick={testCall}
+          className="bg-purple-600 text-white font-bold py-3 px-6 rounded-full hover:bg-purple-700 transition duration-300 text-lg mb-4"
+        ></button>
+         {apiResponse && (
+          <p className="text-white text-lg bg-black bg-opacity-50 p-4 rounded-lg max-w-2xl">
+            {apiResponse}
+          </p>
+        )}
       </div>
       
       <div className="bg-black bg-opacity-50 py-8 px-4 text-center">
