@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock, Code, FileText, Layers, FileUp } from 'lucide-react';
+import axios from 'axios'; // Make sure to install axios: npm install axios
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,8 @@ const SignUpPage = () => {
     devFocus: '',
   });
   const [resumeFile, setResumeFile] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,11 +24,36 @@ const SignUpPage = () => {
     setResumeFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    console.log('Resume file:', resumeFile);
-    // Here you would typically send the data to your backend
+    setError(null);
+    setSuccess(false);
+
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+    if (resumeFile) {
+      formDataToSend.append('resume', resumeFile);
+    }
+
+    try {
+      const response = await axios.post('/api/sign-up', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('Sign up successful:', response.data);
+      setSuccess(true);
+      // Here you might want to store the tokens in local storage or context
+      localStorage.setItem('accessToken', response.data.access_token);
+      localStorage.setItem('refreshToken', response.data.refresh_token);
+      // Redirect or update UI state as needed
+    } catch (err) {
+      console.error('Sign up error:', err.response?.data?.error || err.message);
+      setError(err.response?.data?.error || 'An error occurred during sign up.');
+    }
   };
 
   const formFields = [
@@ -53,6 +81,18 @@ const SignUpPage = () => {
       <p className="text-sm text-gray-600 mb-6">
         Find your perfect pair programming partner
       </p>
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong className="font-bold">Error!</strong>
+          <span className="block sm:inline"> {error}</span>
+        </div>
+      )}
+      {success && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong className="font-bold">Success!</strong>
+          <span className="block sm:inline"> Your account has been created successfully.</span>
+        </div>
+      )}
       <form className="space-y-4" onSubmit={handleSubmit}>
         {formFields.map((field) => (
           <div key={field.name}>
