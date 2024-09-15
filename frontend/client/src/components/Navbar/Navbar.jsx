@@ -8,7 +8,7 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-white text-2xl font-bold flex items-center">
           <Code className="mr-2" />
-          FinDev
+          DevelopersAssemble
         </Link>
         <div className="space-x-4 flex gap:10">
           <Link to="/candidates" className="text-white hover:text-purple-200 flex items-center">

@@ -36,8 +36,9 @@ const SidebarChatComponent = ({ matches, currentUser }) => {
               </div>
               <h3 className="font-bold text-xl mb-2">Start Matching</h3>
               <p className="text-gray-500 text-sm">
-                Matches will appear here once you start to Like people. You can message them directly from here when you're ready to spark up the conversation.
+                Matches will appear here once you start to <span className="text-green-500 text-sm">like</span> people. You can message them directly from here when you're ready to spark up the conversation.
               </p>
+              <p></p>
             </div>
           ) : (
             matches.map(match => (
