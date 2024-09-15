@@ -52,3 +52,29 @@ class Posts(models.Model):
     reqs = models.TextField()
     applicants = models.ManyToManyField(Users, related_name='applied', blank=True, null=True)
     matched = models.ForeignKey(Users, related_name='matched', on_delete=models.SET_NULL, null=True, blank=True)
+
+
+class Chat(models.Model):
+    chat_id = models.AutoField(primary_key=True)
+    user1 = models.ForeignKey(Users, related_name='user1', on_delete=models.CASCADE)
+    user2 = models.ForeignKey(Users, related_name='user2', on_delete=models.CASCADE)
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    used = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user1', 'user2', 'post')
+        ordering = ['-updated_at']
+
+
+class Message(models.Model):
+    message_id = models.AutoField(primary_key=True)
+    chat = models.ForeignKey(Chat, related_name='messages', on_delete=models.CASCADE)
+    sender = models.ForeignKey(Users, on_delete=models.CASCADE)
+    content = models.TextField(blank=True, null=True)
+    #attachment = models.FileField(upload_to='attachments/', blank=True, null=True)
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-sent_at']

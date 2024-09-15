@@ -55,7 +55,8 @@ def sign_in(request):
         
         if request.data['password'] == user.password:
             serializer = UsersSerializer(user, many=False)
-            return Response({'data': serializer.data}, status=200)
+            tokens = get_tokens_for_user(user)
+            return Response({'data': serializer.data, 'refresh_token': tokens['refresh'], 'access_token': tokens['access']}, status=200)
         else:
             return Response({'error': 'Incorrect password'}, 400)
         
@@ -154,6 +155,33 @@ def get_user_data(request, user_id):
         user = Users.objects.get(user_id=user_id)
         user_serializer = UserInfoSerializer(user, many=False)
         return Response({'data': user_serializer.data}, status=200) 
+    
+
+@csrf_exempt
+@api_view(['POST'])
+def get_or_create_chat(request, post_id):
+    if request.method == 'POST':
+        post = Posts.objects.get(post_id=post_id)
+        chat = Chat.objects.get_or_create(post_id=post, user1=request.user, user2=post.user_id)
+        chat_serializer = ChatSerializer(chat, many=False)
+        if chat.used == 0:
+            return Response({'chat': chat_serializer.data, 'messages': None}, 200)
+        else:
+            messages = chat.messages.all().oreder_by('sent_at')
+            messages_serializer = MessageSerializer(messages, many=True)
+            return Response({'chat': chat_serializer.data, 'messages': messages_serializer.data}, 200)
+
+
+
+@csrf_exempt
+@api_view(['POST'])
+def send_message(request, chat_id):
+    if request.method == 'POST':
+        chat = Chat.objects.get(chat_id=chat_id)
+        message = Message.objects.create(chat=chat, sender=request.user, content=request.data['message'])
+        chat.used = 1
+        chat.save()
+        message
     
 def testapicall(request):
     return JsonResponse({"message": "wpifubfi3"})
