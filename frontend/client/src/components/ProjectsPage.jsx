@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, MessageSquare, CircleCheckBig } from 'lucide-react';
 import { useSpring, animated, to } from 'react-spring';
-
+import { axiosWithAuth } from "../utils/axiosWithAuth"
+import axios from 'axios'; 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([
     { id: 1, name: 'E-commerce Platform', company: 'TechCorp', skills: ['React', 'Node.js', 'MongoDB'], image: 'https://picsum.photos/seed/ecommerce/600/400' },
@@ -21,6 +22,17 @@ const ProjectsPage = () => {
     config: { friction: 50, tension: 500 }
   }));
 
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await axiosWithAuth.post('/api/get-posts/');
+        setProjects(response.data.posts);
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+      }
+    };
+    fetchProjects();
+  }, []);
   const handleSwipe = (direction) => {
     api.start({
       x: direction === 'right' ? 500 : -500,
@@ -38,6 +50,10 @@ const ProjectsPage = () => {
       }
     });
   };
+
+  useEffect(() => {
+   console.log("projects", projects) 
+  }, [projects])
 
   const currentProject = projects[currentIndex];
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Mail, Lock, Code, FileText, Layers, FileUp } from 'lucide-react';
 import axios from 'axios'; // Make sure to install axios: npm install axios
 
@@ -38,7 +38,7 @@ const SignUpPage = () => {
     }
 
     try {
-      const response = await axios.post('/api/sign-up', formDataToSend, {
+      const response = await axios.post('/api/sign-up/', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -48,13 +48,16 @@ const SignUpPage = () => {
       setSuccess(true);
       // Here you might want to store the tokens in local storage or context
       localStorage.setItem('accessToken', response.data.access_token);
-      localStorage.setItem('refreshToken', response.data.refresh_token);
-      // Redirect or update UI state as needed
+      navigate('/projects');
     } catch (err) {
       console.error('Sign up error:', err.response?.data?.error || err.message);
       setError(err.response?.data?.error || 'An error occurred during sign up.');
     }
   };
+
+  useEffect(() => {
+    console.log("formData", formData);
+  }, [formData]);
 
   const formFields = [
     { name: 'name', label: 'Full Name', type: 'text', placeholder: 'John Doe', icon: User },
