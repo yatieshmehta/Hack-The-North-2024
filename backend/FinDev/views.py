@@ -93,7 +93,7 @@ def delete_post(request, post_id):
 @api_view(['POST'])
 def get_posts(request):
     if request.method == 'POST':
-        posts = Posts.objects.filter(role=request.user.role)
+        posts = Posts.objects.filter(role=request.user.role, matched__isnull=False)
         posts_serializer = PostsSerializer(posts, many=True)
         return Response({'posts': posts_serializer.data}, status=200)
 
@@ -122,7 +122,7 @@ def apply_to_post(request, post_id):
 @api_view(['POST'])
 def get_user_posts(request):
     if request.method == 'POST':
-        posts = Posts.objects.filter(user_id=request.user)
+        posts = Posts.objects.filter(user_id=request.user, matched__isnull=False)
         posts_serializer = PostsSerializer(posts, many=True)
         return Response({'posts': posts_serializer.data}, status=200)
     
@@ -135,6 +135,16 @@ def view_applicants(request, post_id):
         return Response({'applicants': post.applicants}, status=200)
 
 
+@csrf_exempt
+@api_view(['POST'])
+def match_applicant(request, post_id, user_id):
+    if request.method == 'POST':
+        post = Posts.objects.get(post_id=post_id)
+        applicant = Users.objects.get(id=user_id)
+        post.matched = applicant
+        post.save()
+        return Response({'message': 'Successfully matched'}, status=200)
+
 
 @csrf_exempt
 @api_view(['POST'])
@@ -142,4 +152,4 @@ def get_user_data(request, user_id):
     if request.method == 'POST':
         user = Users.objects.get(user_id=user_id)
         user_serializer = UserInfoSerializer(user, many=False)
-        return Response({'data': user_serializer.data}, status=200)
+        return Response({'data': user_serializer.data}, status=200) 
