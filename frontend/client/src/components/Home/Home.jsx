@@ -32,7 +32,7 @@ const HomePage = () => {
       <div className="flex-grow flex flex-col justify-center items-center px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 flex items-center justify-center">
           <Code className="mr-2" size={48} />
-          FinDev
+          DevelopersAssemble
           <Heart className="ml-2" size={48} />
         </h1>
         <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl">
@@ -42,7 +42,7 @@ const HomePage = () => {
       
       <div className="bg-black bg-opacity-50 py-8 px-4 text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-          Sign Up for FinDev
+          Sign Up for DaaS
         </h2>
         <p className="text-lg md:text-xl text-white mb-6">
           Find your perfect pair programming partner
