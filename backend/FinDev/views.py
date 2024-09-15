@@ -16,7 +16,8 @@ from .serializers import *
 from datetime import datetime
 from django.db.models import Q
 from django.http import JsonResponse
-
+import logging
+logger = logging.getLogger(__name__)
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -31,7 +32,7 @@ def get_tokens_for_user(user):
 @permission_classes([AllowAny])
 def sign_up(request):
     if request.method == 'POST':
-
+        logger.info(f"Received data: {request.data}")
         user_serializer = UsersSerializer(data=request.data)
 
         if user_serializer.is_valid():
@@ -40,6 +41,7 @@ def sign_up(request):
 
             return Response({'data': user_serializer.data, 'refresh_token': tokens['refresh'], 'access_token': tokens['access']}, status=200)
         else:
+            logger.error(f"Serializer errors: {user_serializer.errors}")
             return Response({'error': user_serializer.errors}, 400)
         
 
@@ -95,7 +97,7 @@ def delete_post(request, post_id):
 @api_view(['POST'])
 def get_posts(request):
     if request.method == 'POST':
-        posts = Posts.objects.filter(role=request.user.role, matched__isnull=False)
+        posts = Posts.objects.filter(devFocus=request.user.devFocus, matched__isnull=False)
         posts_serializer = PostsSerializer(posts, many=True)
         return Response({'posts': posts_serializer.data}, status=200)
 

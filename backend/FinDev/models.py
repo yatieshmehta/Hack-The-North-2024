@@ -10,27 +10,30 @@ class UserManager(BaseUserManager):
 
 
 def resume_path(instance, filename):
-    return f"documents/{instance.username}/{filename}"
+    return f"documents/{instance.email}/{filename}"
 
 
 def pfp_path(instance, filename):
-    return f"documents/{instance.username}/{filename}"
+    return f"documents/{instance.email}/{filename}"
 
 
 class Users(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    role = models.CharField(max_length=255)
+    devFocus = models.CharField(max_length=255)
     bio = models.TextField()
-    resume = models.FileField(upload_to=resume_path)
+    favoriteLanguage = models.CharField(max_length=255)
+    resume = models.FileField(upload_to=resume_path, blank=True, null=True)
+    githubUsername = models.CharField(max_length=255, blank=True, null=True)
+    linkedin = models.CharField(max_length=255, blank=True, null=True)
 
-    profile_picture = models.ImageField(upload_to=pfp_path)
+    profile_picture = models.ImageField(upload_to=pfp_path, blank=True, null=True)
 
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'email'
     # REQUIRED_FIELDS = []  
     objects = UserManager()
     
@@ -39,7 +42,7 @@ class Users(AbstractBaseUser):
 
 
 def thumbnail_path(instance, filename):
-    return f"documents/{instance.user_id.username}/posts/{instance.post_id}"
+    return f"documents/{instance.user_id.name}/posts/{instance.post_id}"
 
 
 class Posts(models.Model):
@@ -48,7 +51,7 @@ class Posts(models.Model):
     thumbnail = models.ImageField(upload_to=thumbnail_path)
     title = models.CharField(max_length=255)
     description = models.TextField()
-    role = models.TextField()
+    devFocus = models.TextField()
     reqs = models.TextField()
     applicants = models.ManyToManyField(Users, related_name='applied', blank=True, null=True)
     matched = models.ForeignKey(Users, related_name='matched', on_delete=models.SET_NULL, null=True, blank=True)
